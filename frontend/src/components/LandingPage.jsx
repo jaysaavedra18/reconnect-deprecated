@@ -18,7 +18,7 @@ const LandingPage = () => {
           </p>
           <div>
             <Link
-              to="register"
+              to="auth-form"
               smooth
               duration={500}
               className="group text-white w-fit px-6 py-3 my-2 flex items-center rounded-md bg-gradient-to-r from-green-500 to-blue-500 hover:cursor-pointer"

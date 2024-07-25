@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Link } from "react-scroll";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
 
-  const links = [{ id: 1, link: "" }];
+  const links = [{ id: 1, link: "profile" }];
 
   return (
-    <div className="flex justify-between items-center w-full h-20 text-white bg-black fixed px-4">
+    <div className="flex justify-between items-center w-full h-20 text-white bg-black fixed px-4 mb-10">
       <div>
-        <Link to="home" smooth duration={500}>
+        <Link to="home">
           <h1 className="font-signature text-4xl ml-2 cursor-pointer">
             Reconnect
           </h1>
@@ -24,9 +24,7 @@ const Navbar = () => {
               key={id}
               className="px-4 cursor-pointer capitalize font-medium text-gray-500 hover:scale-105 hover:text-white duration-200"
             >
-              <Link to={link} smooth duration={500}>
-                {link}
-              </Link>
+              <Link to={link}>{link}</Link>
             </li>
           );
         })}
@@ -47,12 +45,7 @@ const Navbar = () => {
                 key={id}
                 className="px-4 cursor-pointer capitalize py-6 text-4xl hover:text-white"
               >
-                <Link
-                  onClick={() => setNav(!nav)}
-                  to={link}
-                  smooth
-                  duration={500}
-                >
+                <Link onClick={() => setNav(!nav)} to={link}>
                   {link}
                 </Link>
               </li>

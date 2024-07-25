@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {},
     fontFamily: {
-      signature: ["Edu AU VIC WA NT Hand"]
+      signature: ["Sofia Sans Semi Condensed"]
     }
   },
   plugins: [],
