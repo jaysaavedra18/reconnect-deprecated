@@ -1,44 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import AuthForm from "./components/AuthForm";
 import HomePage from "./components/HomePage";
-import ProfilePage from "./components/ProfilePage";
+import CreateProfilePage from "./components/CreateProfilePage";
+import ViewProfilePage from "./components/ViewProfilePage";
 import Navbar from "./components/Navbar";
+import { FriendsProvider } from "./context/FriendsContext";
+
+export const Context = React.createContext();
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    // console.log(user);
-    if (user) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
+  const [user, setUser] = useState(null);
 
   return (
-    <>
-      {isAuthenticated ? (
-        <>
-          <Navbar />
-          <div className="py-20">
-            <Routes>
-              <Route exact path="/" element={<HomePage />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-            </Routes>
+    <div className="from-white to-yellow-100">
+      <Context.Provider value={[user, setUser]}>
+        {user ? (
+          <>
+            {console.log(user)}
+            {console.log(JSON.parse(localStorage.getItem("user")))}
+            <FriendsProvider>
+              <Navbar />
+              <div className="">
+                <Routes>
+                  <Route exact path="/" element={<HomePage />} />
+                  <Route path="/home" element={<HomePage />} />
+                  <Route
+                    path="/create-profile"
+                    element={<CreateProfilePage />}
+                  />
+                  <Route path="/profile/:uid" element={<ViewProfilePage />} />
+                </Routes>
+              </div>
+            </FriendsProvider>
+          </>
+        ) : (
+          <div>
+            <LandingPage />
+            <AuthForm />
           </div>
-        </>
-      ) : (
-        <div>
-          <LandingPage />
-          <AuthForm />
-        </div>
-      )}
-    </>
+        )}
+      </Context.Provider>
+    </div>
   );
 }
 

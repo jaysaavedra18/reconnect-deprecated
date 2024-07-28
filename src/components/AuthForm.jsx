@@ -1,28 +1,52 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../../firebase.config";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { getPersonalData } from "../api";
+import { useNavigate } from "react-router-dom";
+import { Context } from "../App";
 
 const AuthForm = () => {
+  const [authUser, loading, error] = useAuthState(auth);
+  const navigate = useNavigate();
+  const [user, setUser] = useContext(Context);
+
+  useEffect(() => {
+    if (authUser) {
+      localStorage.setItem("user", JSON.stringify(authUser));
+      setUser(authUser);
+    } else {
+      localStorage.removeItem("user");
+      setUser(null);
+    }
+  }, [authUser]);
+
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      // Handle the result (e.g., access token, user info)
-      const [user] = useAuthState(auth);
-      useEffect(() => {
-        if (user) {
-          // Store user in local storage
-          localStorage.setItem("user", JSON.stringify(user));
-        } else {
-          // Remove user from local storage
-          localStorage.removeItem("user");
-        }
-      }, [user]);
+      // After sign-in, user will be updated automatically by useAuthState hook
+      const userData = await getPersonalData(result.user.uid);
+
+      if (userData) {
+        console.log("Existing user");
+        // navigate("/home");
+      } else {
+        console.log("New user");
+        navigate("/profile");
+      }
     } catch (error) {
       console.error("Error signing in with Google: ", error);
     }
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   return (
     <div
